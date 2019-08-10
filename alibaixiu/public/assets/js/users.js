@@ -23,6 +23,7 @@ $('button').on('click', function() {
         success: function(res) {
             userArr.push(res);
             render(userArr);
+            $('#userForm > h2').text('添加用户');
             $('#userAdd').show();
             $('#userEdit').hide();
             $('#preview').attr('src', '../assets/img/default.png');
@@ -97,30 +98,96 @@ $('tbody').on('click', '.edit', function() {
 })
 
 $('#userEdit').on('click', function() {
-    //console.log($('#userForm').serialize());
-    // 我们需要发送ajax给服务器时 需要传递Id 
-    $.ajax({
-        type: 'put',
-        url: '/users/' + userId,
-        data: $('#userForm').serialize(),
-        success: function(res) {
-            // 我们只是将数据库里面的数据给修改 但是我们将userArr这个数组里面的元素给修改
-            // 我们要从userArr这个数组中 将要修改这个数组元素找出来 
-            var index = userArr.findIndex(item => item._id == userId);
-            // 根据这个index找到数组的这个元素 将它的数据更新 
-            userArr[index] = res;
-            // 调用render方法 重新渲染页面 
-            render(userArr);
-            $('#userAdd').show();
-            $('#userEdit').hide();
-            $('#preview').attr('src', '../assets/img/default.png');
-            $('#email').val('');
-            $('#nickName').val('');
-            $('#password').val('');
-            $('#wjh').prop('checked', false);
-            $('#jh').prop('checked', false);
-            $('#admin').prop('checked', false);
-            $("#normal").prop('checked', false);
+        //console.log($('#userForm').serialize());
+        // 我们需要发送ajax给服务器时 需要传递Id 
+        $.ajax({
+            type: 'put',
+            url: '/users/' + userId,
+            data: $('#userForm').serialize(),
+            success: function(res) {
+                // 我们只是将数据库里面的数据给修改 但是我们将userArr这个数组里面的元素给修改
+                // 我们要从userArr这个数组中 将要修改这个数组元素找出来 
+                var index = userArr.findIndex(item => item._id == userId);
+                // 根据这个index找到数组的这个元素 将它的数据更新 
+                userArr[index] = res;
+                // 调用render方法 重新渲染页面 
+                render(userArr);
+                $('#userForm > h2').text('添加用户');
+                $('#userAdd').show();
+                $('#userEdit').hide();
+                $('#preview').attr('src', '../assets/img/default.png');
+                $('#email').val('');
+                $('#nickName').val('');
+                $('#password').val('');
+                $('#wjh').prop('checked', false);
+                $('#jh').prop('checked', false);
+                $('#admin').prop('checked', false);
+                $("#normal").prop('checked', false);
+            }
+        })
+    })
+    //删除功能
+$('tbody').on('click', '.del', function() {
+        if (confirm('确定要删除吗')) {
+            var id = $(this).parent().attr('data-id');
+            $.ajax({
+                type: 'delete',
+                url: '/users/' + id,
+                success: function(res) {
+                    var index = userArr.findIndex(item => item._id == id);
+                    userArr.splice(index, 1);
+                    render(userArr);
+                }
+            })
         }
     })
+    //全选按钮
+$('thead input').on('change', function() {
+        var status = $(this).prop('checked');
+        $('tbody input').prop('checked', status);
+        //如果全选按钮被选中  显示批量删除按钮
+        if (status) {
+            $('.btn-sm').show();
+        } else {
+            $('.btn-sm').hide();
+        }
+    })
+    //下面的按钮
+$('tbody').on('change', 'input', function() {
+    if ($('tbody input').length == $('tbody input:checked').length) {
+        $('thead input').prop('checked', true);
+    } else {
+        $('thead input').prop('checked', false);
+    }
+    // 如果被选中的按钮大于1  显示批量删除按钮
+    if ($('tbody input:checked').length > 1) {
+        $('.btn-sm').show();
+    } else {
+        $('.btn-sm').hide();
+    }
+})
+$('.btn-sm').on('click', function() {
+    if (confirm('真的要删除吗?')) {
+        var ids = [];
+        // 想要获取被选中的元素的id属性值 
+        var checkUser = $('tbody input:checked');
+        checkUser.each(function(k, v) {
+                var id = v.parentNode.parentNode.children[6].getAttribute('data-id');
+                ids.push(id);
+            })
+            // 发送ajax
+        $.ajax({
+            type: 'delete',
+            url: '/users/' + ids.join('-'),
+            success: function(res) {
+                // res是这一个数组 数组里面放的被删除的元素 元素是一个对象 
+                res.forEach(e => {
+                    var index = userArr.findIndex(item => item._id == e._id);
+                    // 调用splice()
+                    userArr.splice(index, 1);
+                    render(userArr);
+                })
+            }
+        })
+    }
 })

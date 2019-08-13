@@ -61,7 +61,7 @@
             success: function(res) {
                 // render(c,s,currentPage);
                 // 如果tbody标签下面的有标签 这个时候我们就让它在当前页码 如果已经已经不大于1  我们应该它让回到前一页
-                if ($('tbody').children().length > 1) {
+                if ($('tbody').children().length == 1) {
                     // 如果当前页码已经是第一页了 我们就让它不跳转到前一页  
                     if (currentPage == 1) {
                         render(c, s, currentPage);
@@ -69,7 +69,7 @@
                         render(c, s, currentPage - 1);
                     }
                 } else {
-                    render(c, s, currentPage - 1);
+                    render(c, s, currentPage);
                 }
             }
         })

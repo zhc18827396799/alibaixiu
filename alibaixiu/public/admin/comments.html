@@ -129,7 +129,7 @@
         <tr>
             <td>{{$value.author.nickName}}</td>
             <td>{{$value.content}}</td>
-            <td>{{$value.post.title}}</td>
+            <td>{{$value.post && $value.post.title}}</td>
             <td>{{$value.createAt.split('T')[0]}}</td>
             <td>{{$value.state == 0 ? '未审核' : '已批准'}}</td>
             <td class="text-center">

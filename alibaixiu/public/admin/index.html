@@ -26,7 +26,7 @@
         <nav class="navbar">
             <button class="btn btn-default navbar-btn fa fa-bars"></button>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="profile.html"><i class="fa fa-user"></i>个人中心</a></li>
+                <li><a href="password-reset.html"><i class="fa fa-user"></i>修改密码</a></li>
                 <li><a href="javascript:;" id="logout"><i class="fa fa-sign-out"></i>退出</a></li>
             </ul>
         </nav>
@@ -43,9 +43,9 @@
                             <h3 class="panel-title">站点内容统计：</h3>
                         </div>
                         <ul class="list-group">
-                            <li class="list-group-item"><strong>10</strong>篇文章（<strong>2</strong>篇草稿）</li>
-                            <li class="list-group-item"><strong>6</strong>个分类</li>
-                            <li class="list-group-item"><strong>5</strong>条评论（<strong>1</strong>条待审核）</li>
+                            <li class="list-group-item" id="post"></li>
+                            <li class="list-group-item" id="category"></li>
+                            <li class="list-group-item" id="comment"></li>
                         </ul>
                     </div>
                 </div>
@@ -95,26 +95,10 @@
     <script src="../assets/vendors/jquery/jquery.js"></script>
     <script src="../assets/vendors/bootstrap/js/bootstrap.js"></script>
     <script>
-        $('#logout').on('click', function() {
-            var isconfirm = confirm('您确定要退出吗?');
-            if (isconfirm) {
-                $.ajax({
-                    type: 'post',
-                    url: '/logout',
-                    success: function(res) {
-                        location.href = 'login.html';
-                    },
-                    error: function(res) {
-                        alert('退出失败');
-                    }
-                })
-            }
-        })
-
-
-
         NProgress.done()
     </script>
+    <!-- <script src="../assets/js/common.js"></script> -->
+    <script src="../assets/js/index.js"></script>
 </body>
 
 </html>
